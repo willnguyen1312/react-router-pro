@@ -8,20 +8,22 @@ type User = {
   lastName: string;
 };
 
-const users: User[] = Array.from({ length: 10 }, () => ({
+const users: User[] = Array.from({ length: 3 }, () => ({
   id: faker.string.uuid(),
   firstName: faker.name.firstName(),
   lastName: faker.name.lastName(),
 }));
 
 export const handlers = [
-  http.get("/users", () => {
+  http.get("/users", async () => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     return HttpResponse.json({
       users,
     });
   }),
 
   http.post("/users", async ({ request }) => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     const { firstName, lastName } = (await request.json()) as {
       firstName: string;
       lastName: string;
