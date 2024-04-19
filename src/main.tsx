@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
 
 async function enableMocking() {
   const { worker } = await import("./mocks/browser");
@@ -11,10 +10,12 @@ async function enableMocking() {
   return worker.start();
 }
 
-enableMocking().then(() => {
+enableMocking().then(async () => {
+  const App = (await import("./App")).default;
+
   ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
       <App />
-    </React.StrictMode>
+    </React.StrictMode>,
   );
 });

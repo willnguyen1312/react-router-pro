@@ -5,7 +5,6 @@ import {
   useLoaderData,
   useRevalidator,
   Link,
-  redirect,
   Form,
   useActionData,
   useNavigation,
@@ -16,8 +15,6 @@ let router = createBrowserRouter([
     path: "/",
     Component: Layout,
     loader: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
       const response = await fetch("/users");
       return response.json();
     },
