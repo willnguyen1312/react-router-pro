@@ -14,8 +14,10 @@ let router = createBrowserRouter([
   {
     path: "/",
     Component: Layout,
-    loader: async () => {
-      const response = await fetch("/users");
+    loader: async ({ request }) => {
+      const response = await fetch("/users", {
+        signal: request.signal,
+      });
       return response.json();
     },
     children: [
@@ -36,6 +38,7 @@ let router = createBrowserRouter([
 
           await fetch("/users", {
             method: "POST",
+            signal: request.signal,
             headers: {
               "Content-Type": "application/json",
             },
@@ -49,6 +52,10 @@ let router = createBrowserRouter([
         },
       },
     ],
+  },
+  {
+    path: "/else",
+    Component: () => <p>Else where</p>,
   },
 ]);
 
@@ -82,6 +89,9 @@ function Layout() {
         <ul>
           <li>
             <Link to="/new">New user</Link>
+          </li>
+          <li>
+            <Link to="/else">Else where</Link>
           </li>
           <li>
             <button onClick={() => revalidator.revalidate()}>
