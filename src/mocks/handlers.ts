@@ -23,7 +23,7 @@ export const handlers = [
   }),
 
   http.post("/users", async ({ request }) => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 3000));
     const { firstName, lastName } = (await request.json()) as {
       firstName: string;
       lastName: string;
