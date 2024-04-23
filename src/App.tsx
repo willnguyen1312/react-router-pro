@@ -12,7 +12,7 @@ import {
 
 let router = createBrowserRouter([
   {
-    path: "/",
+    // path: "/",
     Component: Layout,
     loader: async ({ request }) => {
       const response = await fetch("/users", {
