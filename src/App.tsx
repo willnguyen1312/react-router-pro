@@ -75,6 +75,10 @@ let router = createBrowserRouter([
         path: "*",
         Component: () => <p>404 place</p>,
       },
+      {
+        path: ":id",
+        Component: () => <p>Id place</p>,
+      },
     ],
   },
   {
