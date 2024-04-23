@@ -8,10 +8,30 @@ import {
   Form,
   useActionData,
   useNavigation,
+  isRouteErrorResponse,
 } from "react-router-dom";
+
+import { useRouteError } from "react-router-dom";
+
+function ErrorPage() {
+  const error = useRouteError();
+
+  const is404 = isRouteErrorResponse(error) && error.status === 404;
+
+  if (is404) {
+    return (
+      <div>
+        <p style={{ color: "red", fontSize: "30px" }}>404 Page Not Found</p>
+      </div>
+    );
+  }
+
+  return null;
+}
 
 let router = createBrowserRouter([
   {
+    errorElement: <ErrorPage />,
     // path: "/",
     Component: Layout,
     loader: async ({ request }) => {
@@ -92,6 +112,9 @@ function Layout() {
           </li>
           <li>
             <Link to="/else">Else where</Link>
+          </li>
+          <li>
+            <Link to="/404">404 place</Link>
           </li>
           <li>
             <button onClick={() => revalidator.revalidate()}>
