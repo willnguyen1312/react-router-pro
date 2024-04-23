@@ -32,7 +32,7 @@ function ErrorPage() {
 let router = createBrowserRouter([
   {
     errorElement: <ErrorPage />,
-    // path: "/",
+    path: "/aa/*",
     Component: Layout,
     loader: async ({ request }) => {
       const response = await fetch("/users", {
@@ -71,11 +71,19 @@ let router = createBrowserRouter([
           };
         },
       },
+      {
+        path: "*",
+        Component: () => <p>404 place</p>,
+      },
     ],
   },
   {
     path: "/else",
     Component: () => <p>Else where</p>,
+  },
+  {
+    path: "/aa/:id",
+    Component: () => <p>Aha place</p>,
   },
 ]);
 
