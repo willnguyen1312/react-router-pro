@@ -1,10 +1,6 @@
 import {
   createBrowserRouter,
   RouterProvider,
-  Outlet,
-  useLoaderData,
-  useRevalidator,
-  Link,
   Form,
   useActionData,
   useNavigation,
@@ -32,9 +28,21 @@ function ErrorPage() {
 let router = createBrowserRouter([
   {
     errorElement: <ErrorPage />,
-    path: "/aa/*",
-    Component: Layout,
+    path: "/",
+    lazy: async () => {
+      const [{ Layout }] = await Promise.all([
+        import("./Layout.tsx"),
+        // import("./loader.ts"),
+      ]);
+      return {
+        Component: Layout,
+        // loader,
+      };
+    },
     loader: async ({ request }) => {
+      console.log("Loading data");
+
+      await fetch("https://jsonplaceholder.typicode.com/todos/1");
       const response = await fetch("/users", {
         signal: request.signal,
       });
@@ -97,48 +105,6 @@ if (import.meta.hot) {
 
 export default function App() {
   return <RouterProvider router={router} />;
-}
-
-function Layout() {
-  const response = useLoaderData() as any;
-  const revalidator = useRevalidator();
-
-  return (
-    <main>
-      <h1>Sample App</h1>
-
-      <h2>List of users:</h2>
-
-      <ul>
-        {response.users.map((user: any) => (
-          <li key={user.id}>
-            {user.firstName} {user.lastName}
-          </li>
-        ))}
-      </ul>
-
-      <nav>
-        <ul>
-          <li>
-            <Link to="/new">New user</Link>
-          </li>
-          <li>
-            <Link to="/else">Else where</Link>
-          </li>
-          <li>
-            <Link to="/404">404 place</Link>
-          </li>
-          <li>
-            <button onClick={() => revalidator.revalidate()}>
-              Revalidate Data
-            </button>
-          </li>
-        </ul>
-      </nav>
-
-      <Outlet />
-    </main>
-  );
 }
 
 function Home() {

@@ -16,7 +16,7 @@ const users: User[] = Array.from({ length: 3 }, () => ({
 
 export const handlers = [
   http.get("/users", async () => {
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     return HttpResponse.json({
       users,
     });
