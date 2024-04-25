@@ -5,6 +5,7 @@ import {
   useActionData,
   useNavigation,
   isRouteErrorResponse,
+  useFetcher,
 } from "react-router-dom";
 
 import { useRouteError } from "react-router-dom";
@@ -25,6 +26,8 @@ function ErrorPage() {
   return null;
 }
 
+const CHARS = ["Homer", "Bart", "Marge", "Lisa", "Maggie", "Hank"];
+
 let router = createBrowserRouter([
   {
     errorElement: <ErrorPage />,
@@ -39,6 +42,9 @@ let router = createBrowserRouter([
         // loader,
       };
     },
+    shouldRevalidate: (request) => {
+      return request.formAction !== "/data";
+    },
     loader: async ({ request }) => {
       console.log("Loading data");
 
@@ -47,6 +53,35 @@ let router = createBrowserRouter([
         signal: request.signal,
       });
       return response.json();
+      // return {
+      //   users: [
+      //     {
+      //       id: 1,
+      //       firstName: "Homer",
+      //       lastName: "Simpson",
+      //     },
+      //     {
+      //       id: 2,
+      //       firstName: "Marge",
+      //       lastName: "Simpson",
+      //     },
+      //     {
+      //       id: 3,
+      //       firstName: "Bart",
+      //       lastName: "Simpson",
+      //     },
+      //     {
+      //       id: 4,
+      //       firstName: "Lisa",
+      //       lastName: "Simpson",
+      //     },
+      //     {
+      //       id: 5,
+      //       firstName: "Maggie",
+      //       lastName: "Simpson",
+      //     },
+      //   ],
+      // };
     },
     children: [
       {
@@ -97,6 +132,23 @@ let router = createBrowserRouter([
     path: "/aa/:id",
     Component: () => <p>Aha place</p>,
   },
+  {
+    path: "/data",
+    loader: () => {
+      return {
+        data: CHARS,
+      };
+    },
+    action: async ({ request }) => {
+      CHARS.push(CHARS.length.toString());
+      const form = await request.formData();
+      console.log(form.get("idle"));
+
+      return {
+        data: CHARS,
+      };
+    },
+  },
 ]);
 
 if (import.meta.hot) {
@@ -113,28 +165,39 @@ function Home() {
 
 function NewUser() {
   const navigation = useNavigation();
-  const actionData = useActionData();
+  // const actionData = useActionData();
+  const fetcher = useFetcher();
 
-  console.log({ actionData });
+  console.log(fetcher);
 
   const isPending =
     navigation.state === "submitting" || navigation.state === "loading";
 
   return (
-    <Form method="post">
-      <label>
-        First Name:
-        <input type="text" name="firstName" />
-      </label>
+    <div>
+      <Form method="post">
+        <label>
+          First Name:
+          <input type="text" name="firstName" />
+        </label>
 
-      <label>
-        Last Name:
-        <input type="text" name="lastName" />
-      </label>
+        <label>
+          Last Name:
+          <input type="text" name="lastName" />
+        </label>
 
-      {isPending && <p>Loading...</p>}
+        {isPending && <p>Loading...</p>}
 
-      <button type="submit">Create User</button>
-    </Form>
+        <button type="submit">Create User</button>
+      </Form>
+
+      <button
+        onClick={() => {
+          fetcher.submit({ idle: true }, { method: "post", action: "/data" });
+        }}
+      >
+        Click me
+      </button>
+    </div>
   );
 }
