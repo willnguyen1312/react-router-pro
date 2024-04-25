@@ -6,6 +6,7 @@ import {
   useNavigation,
   isRouteErrorResponse,
   useFetcher,
+  redirect,
 } from "react-router-dom";
 
 import { useRouteError } from "react-router-dom";
@@ -134,6 +135,7 @@ let router = createBrowserRouter([
   },
   {
     path: "/data",
+    Component: () => <p>Data place</p>,
     loader: () => {
       return {
         data: CHARS,
