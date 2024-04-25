@@ -7,6 +7,7 @@ import {
   isRouteErrorResponse,
   useFetcher,
   redirect,
+  json,
 } from "react-router-dom";
 
 import { useRouteError } from "react-router-dom";
@@ -23,6 +24,8 @@ function ErrorPage() {
       </div>
     );
   }
+
+  console.log({ error });
 
   return null;
 }
@@ -136,7 +139,11 @@ let router = createBrowserRouter([
   {
     path: "/data",
     Component: () => <p>Data place</p>,
-    loader: () => {
+    loader: async ({ request }) => {
+      // const form = await request.formData();
+      const search = new URL(request.url).searchParams.get("idle");
+      console.log({ search });
+
       return {
         data: CHARS,
       };
@@ -177,7 +184,7 @@ function NewUser() {
 
   return (
     <div>
-      <Form method="post">
+      {/* <Form method="post">
         <label>
           First Name:
           <input type="text" name="firstName" />
@@ -191,11 +198,11 @@ function NewUser() {
         {isPending && <p>Loading...</p>}
 
         <button type="submit">Create User</button>
-      </Form>
+      </Form> */}
 
       <button
         onClick={() => {
-          fetcher.submit({ idle: true }, { method: "post", action: "/data" });
+          fetcher.submit({ idle: true }, { method: "get", action: "/data" });
         }}
       >
         Click me
