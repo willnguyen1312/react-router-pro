@@ -8,6 +8,7 @@ import {
   useFetcher,
   redirect,
   json,
+  useLocation,
 } from "react-router-dom";
 
 import { useRouteError } from "react-router-dom";
@@ -174,6 +175,7 @@ function Home() {
 
 function NewUser() {
   const navigation = useNavigation();
+  console.log(useLocation().key);
   // const actionData = useActionData();
   const fetcher = useFetcher();
 
