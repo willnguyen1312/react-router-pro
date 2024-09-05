@@ -9,6 +9,7 @@ import {
   redirect,
   json,
   useLocation,
+  useNavigate,
 } from "react-router-dom";
 
 import { useRouteError } from "react-router-dom";
@@ -58,35 +59,6 @@ let router = createBrowserRouter([
         signal: request.signal,
       });
       return response.json();
-      // return {
-      //   users: [
-      //     {
-      //       id: 1,
-      //       firstName: "Homer",
-      //       lastName: "Simpson",
-      //     },
-      //     {
-      //       id: 2,
-      //       firstName: "Marge",
-      //       lastName: "Simpson",
-      //     },
-      //     {
-      //       id: 3,
-      //       firstName: "Bart",
-      //       lastName: "Simpson",
-      //     },
-      //     {
-      //       id: 4,
-      //       firstName: "Lisa",
-      //       lastName: "Simpson",
-      //     },
-      //     {
-      //       id: 5,
-      //       firstName: "Maggie",
-      //       lastName: "Simpson",
-      //     },
-      //   ],
-      // };
     },
     children: [
       {
@@ -170,12 +142,30 @@ export default function App() {
 }
 
 function Home() {
-  return <p>Welcome to the home page</p>;
+  const navigate = useNavigate();
+  return (
+    <div>
+      <h1>Welcome to the home page</h1>
+
+      <button
+        onClick={() => {
+          navigate("/new", {
+            state: {
+              foo: "bar",
+            },
+          });
+        }}
+      >
+        Navigate to new route
+      </button>
+    </div>
+  );
 }
 
 function NewUser() {
   const navigation = useNavigation();
-  console.log(useLocation().key);
+  const location = useLocation();
+
   // const actionData = useActionData();
   const fetcher = useFetcher();
 
@@ -186,22 +176,6 @@ function NewUser() {
 
   return (
     <div>
-      {/* <Form method="post">
-        <label>
-          First Name:
-          <input type="text" name="firstName" />
-        </label>
-
-        <label>
-          Last Name:
-          <input type="text" name="lastName" />
-        </label>
-
-        {isPending && <p>Loading...</p>}
-
-        <button type="submit">Create User</button>
-      </Form> */}
-
       <button
         onClick={() => {
           fetcher.submit({ idle: true }, { method: "get", action: "/data" });
