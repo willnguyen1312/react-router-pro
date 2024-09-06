@@ -149,6 +149,7 @@ function Home() {
 
       <button
         onClick={() => {
+          debugger;
           navigate("/new", {
             state: {
               foo: "bar",
